@@ -36,6 +36,27 @@ public class Utils {
         }
     }
 
+//    public static int[] readIntsPair(String file_name) {
+//        try {
+//            FileInputStream input_stream = new FileInputStream(new File("E:\\algs4-projects\\" + file_name));
+//            InputStreamReader input_stream_reader = new InputStreamReader(input_stream);
+//            BufferedReader buffered_reader = new BufferedReader(input_stream_reader);
+//            ArrayList<String> array = new ArrayList<String>();
+//
+//            while()
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//            return null;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+
+    public static File getFile(String file_name) {
+        return new File("E:\\algs4-projects\\" + file_name);
+    }
+
     public static int[] genericRandomInts(int N) {
         int[] a = new int[N];
         for(int i = 0; i < N; ++i) {
