@@ -1,3 +1,5 @@
+import java.util.Queue;
+
 /**
  * Created by lyz on 15-2-2.
  * 1. Value get(Key key)
@@ -170,15 +172,93 @@ public class BST<Key extends Comparable<Key>, Value> {
             return size(x.left);
     }
 
+    public void deleteMin() {
+        root = deleteMin(root);
+    }
+
+    private Node deleteMin(Node x) {
+        if(x.left == null)
+            return x.right;
+        x.left = deleteMin(x.left);
+        x.N = size(x.left) + size(x.right) + 1;
+        return x;
+    }
+
+    public void delete(Key key) {
+        root = delete(root, key);
+    }
+
+    private Node delete(Node x, Key key) {
+        if(x == null)
+            return null;
+        int cmp = key.compareTo(x.key);
+        if(cmp > 0)
+            x.right = delete(x.right, key);
+        else if(cmp < 0)
+            x.left = delete(x.left, key);
+        else {
+            if(x.right == null)
+                return x.left;
+            if(x.left == null)
+                return x.right;
+            Node t = x;
+            x = min(t.right);
+            x.right = deleteMin(t.right);
+            x.left = t.left;
+        }
+        x.N = size(x.left) + size(x.right) + 1;
+        return x;
+    }
+
+    private void print(Node x) {
+        if(x == null)
+            return;
+        if(x.left != null)
+            print(x.left);
+        StdOut.print(x.key + " ");
+        print(x.right);
+    }
+
+    public Iterable<Key> keys() {
+        return keys(min(), max());
+    }
+
+    public Iterable<Key> keys(Key low, Key high) {
+        MyQueue<Key> my_queue = new MyQueue<Key>();
+        keys(root, my_queue, min(), max());
+        return my_queue;
+    }
+
+    private void keys(Node x, MyQueue<Key> queue, Key low, Key high) {
+        if(x == null)
+            return;
+        int cmp_low = low.compareTo(x.key);
+        int cmp_high = high.compareTo(x.key);
+        if(cmp_low < 0)
+            keys(x.left, queue, low, high);
+        if(cmp_low <= 0 && cmp_high >= 0)
+            queue.enqueue(x.key);
+        if(cmp_high > 0)
+            keys(x.right, queue, low, high);
+    }
+
     public static void main(String[] args) {
         BST<String, Integer> bst = new BST<String, Integer>();
         bst.put("J", 1);
         bst.put("B", 2);
         bst.put("A", 3);
         bst.put("H", 4);
+        bst.put("T", 5);
+        bst.put("V", 6);
+        bst.put("C", 7);
         StdOut.println(bst.size() + "");
         StdOut.println(bst.get("A") + "");
         StdOut.println(bst.get("B") + "");
         StdOut.println(bst.max() + "");
+        bst.print(bst.root);
+        StdOut.println();
+        Iterable<String> keys_array = bst.keys();
+        for(String str : keys_array)
+            StdOut.print(str + " ");
     }
 }
